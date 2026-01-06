@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Converter Pro</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: -0.025em;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .converter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        textarea {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            color: white;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .controls {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid #334155;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #334155;
+        }
+
+        .copy-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Binary Translator</h1>
+        <p>Convert English text to Binary code and back instantly.</p>
+    </header>
+
+    <div class="converter-grid">
+        <div class="group">
+            <label for="textInput">English Text</label>
+            <textarea id="textInput" placeholder="Type your message here..."></textarea>
+        </div>
+
+        <div class="group">
+            <label for="binaryInput">Binary Code</label>
+            <textarea id="binaryInput" placeholder="01001000 01100101..."></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="convertToBinary()">Text to Binary ↓</button>
+            <button class="btn-primary" onclick="convertToText()">Binary to Text ↑</button>
+            <button class="btn-secondary" onclick="clearAll()">Clear</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const textInput = document.getElementById('textInput');
+    const binaryInput = document.getElementById('binaryInput');
+
+    function convertToBinary() {
+        const text = textInput.value;
+        const binary = text.split('').map(char => {
+            return char.charCodeAt(0).toString(2).padStart(8, '0');
+        }).join(' ');
+        binaryInput.value = binary;
+    }
+
+    function convertToText() {
+        const binary = binaryInput.value.trim();
+        if (!binary) return;
+        
+        try {
+            const text = binary.split(/\s+/).map(bin => {
+                return String.fromCharCode(parseInt(bin, 2));
+            }).join('');
+            textInput.value = text;
+        } catch (e) {
+            alert("Invalid binary format! Please ensure you use 8-bit blocks separated by spaces.");
+        }
+    }
+
+    function clearAll() {
+        textInput.value = '';
+        binaryInput.value = '';
+    }
+</script>
+
+</body>
+</html>
