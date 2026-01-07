@@ -7,15 +7,15 @@
     <style>
         :root {
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
+            --primary-light: #a5b4fc;
             --bg: #0f172a;
             --card-bg: #1e293b;
             --text: #f8fafc;
-            --text-muted: #94a3b8;
+            --success: #10b981;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             display: flex;
@@ -23,179 +23,186 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), var(--bg);
+            background-size: 100% 4px;
         }
 
         .container {
             background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             width: 90%;
             max-width: 800px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
+        .typing-header { display: flex; justify-content: center; margin-bottom: 1.5rem; }
         h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            letter-spacing: -0.025em;
+            text-align: center; overflow: hidden; border-right: .15em solid var(--primary);
+            white-space: nowrap; margin: 0; letter-spacing: .15em;
+            animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+            width: fit-content; color: var(--primary-light); text-transform: uppercase;
         }
 
-        p {
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--primary); } }
 
-        .converter-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
 
-        @media (min-width: 768px) {
-            .converter-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
+        .textarea-wrapper { position: relative; overflow: hidden; border-radius: 10px; }
         textarea {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 0.5rem;
-            color: white;
-            padding: 1rem;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1rem;
-            resize: vertical;
-            min-height: 150px;
-            transition: border-color 0.2s;
+            width: 100%; height: 180px; background: #0f172a; color: var(--success);
+            border: 1px solid #334155; padding: 15px; box-sizing: border-box;
+            font-family: 'Courier New', monospace; font-size: 1rem; transition: all 0.3s ease;
+            display: block; resize: none;
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        .scanner-line {
+            position: absolute; top: -5px; left: 0; width: 100%; height: 4px;
+            background: var(--success); box-shadow: 0 0 15px var(--success);
+            opacity: 0; z-index: 10;
         }
+        .scanning .scanner-line { animation: scan 1.5s linear infinite; opacity: 1; }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
 
-        .controls {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
+        .btns { grid-column: 1 / -1; display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
+        
+        /* --- MOVING ANIMATION BUTTONS --- */
         button {
-            cursor: pointer;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
+            padding: 14px 28px;
+            border-radius: 12px;
             border: none;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
             color: white;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #6366f1, #4f46e5, #818cf8, #6366f1);
+            background-size: 300% 300%;
+            animation: gradientFlow 5s ease infinite, pulseBtn 3s infinite; /* Continuous animations */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
+        /* Moving Gradient Background */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid #334155;
-            color: var(--text);
+        /* Gentle Idle Pulse */
+        @keyframes pulseBtn {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
 
-        .btn-secondary:hover {
-            background-color: #334155;
+        /* Shimmer Sweep Effect */
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: none;
+            animation: shimmer 4s infinite;
         }
 
-        .copy-hint {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: right;
-            margin-top: 0.25rem;
+        @keyframes shimmer {
+            0% { left: -60%; }
+            20% { left: 120%; }
+            100% { left: 120%; }
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.08) !important;
+            box-shadow: 0 12px 20px rgba(99, 102, 241, 0.5);
+            animation-play-state: paused; /* Stop pulse on hover for focus */
+        }
+
+        button:active { transform: scale(0.95) !important; }
+
+        button:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
+
+        #status-msg {
+            text-align: center; height: 20px; margin-top: 10px;
+            font-size: 0.85rem; color: var(--success); font-family: monospace; visibility: hidden;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Binary Translator</h1>
-        <p>Convert English text to Binary code and back instantly.</p>
-    </header>
-
-    <div class="converter-grid">
-        <div class="group">
-            <label for="textInput">English Text</label>
-            <textarea id="textInput" placeholder="Type your message here..."></textarea>
+    <div class="typing-header"><h1>Binary Converter</h1></div>
+    <div class="grid">
+        <div class="textarea-wrapper" id="txt-wrap">
+            <div class="scanner-line"></div>
+            <textarea id="txt" placeholder="Enter English text..."></textarea>
         </div>
-
-        <div class="group">
-            <label for="binaryInput">Binary Code</label>
-            <textarea id="binaryInput" placeholder="01001000 01100101..."></textarea>
+        <div class="textarea-wrapper" id="bin-wrap">
+            <div class="scanner-line"></div>
+            <textarea id="bin" placeholder="Enter Binary code..."></textarea>
         </div>
-
-        <div class="controls">
-            <button class="btn-primary" onclick="convertToBinary()">Text to Binary ↓</button>
-            <button class="btn-primary" onclick="convertToText()">Binary to Text ↑</button>
-            <button class="btn-secondary" onclick="clearAll()">Clear</button>
+        <div id="status-msg">SYSTEM IDLE... 0%</div>
+        <div class="btns">
+            <button id="toBinBtn" onclick="process('toBin')">Convert to Binary</button>
+            <button id="toTxtBtn" onclick="process('toTxt')">Convert to Text</button>
+            <button style="background:#334155; animation: none;" onclick="clearAll()">Clear</button>
         </div>
     </div>
 </div>
 
 <script>
-    const textInput = document.getElementById('textInput');
-    const binaryInput = document.getElementById('binaryInput');
+    function process(type) {
+        const txtArea = document.getElementById('txt');
+        const binArea = document.getElementById('bin');
+        const txtWrap = document.getElementById('txt-wrap');
+        const binWrap = document.getElementById('bin-wrap');
+        const status = document.getElementById('status-msg');
+        const buttons = document.querySelectorAll('button');
 
-    function convertToBinary() {
-        const text = textInput.value;
-        const binary = text.split('').map(char => {
-            return char.charCodeAt(0).toString(2).padStart(8, '0');
-        }).join(' ');
-        binaryInput.value = binary;
-    }
+        status.style.visibility = "visible";
+        txtWrap.classList.add('scanning');
+        binWrap.classList.add('scanning');
+        buttons.forEach(b => b.disabled = true);
 
-    function convertToText() {
-        const binary = binaryInput.value.trim();
-        if (!binary) return;
-        
-        try {
-            const text = binary.split(/\s+/).map(bin => {
-                return String.fromCharCode(parseInt(bin, 2));
-            }).join('');
-            textInput.value = text;
-        } catch (e) {
-            alert("Invalid binary format! Please ensure you use 8-bit blocks separated by spaces.");
-        }
+        let percent = 0;
+        let interval = setInterval(() => {
+            percent += 10;
+            status.innerText = (type === 'toBin' ? "ENCODING... " : "DECODING... ") + percent + "%";
+            if(percent >= 100) clearInterval(interval);
+        }, 120);
+
+        setTimeout(() => {
+            if (type === 'toBin') {
+                binArea.value = txtArea.value.split('').map(char => 
+                    char.charCodeAt(0).toString(2).padStart(8, '0')
+                ).join(' ');
+            } else {
+                try {
+                    txtArea.value = binArea.value.trim().split(/\s+/).map(bin => 
+                        String.fromCharCode(parseInt(bin, 2))
+                    ).join('');
+                } catch(e) { alert("Error: Invalid binary input."); }
+            }
+            status.style.visibility = "hidden";
+            txtWrap.classList.remove('scanning');
+            binWrap.classList.remove('scanning');
+            buttons.forEach(b => b.disabled = false);
+        }, 1500); 
     }
 
     function clearAll() {
-        textInput.value = '';
-        binaryInput.value = '';
+        document.getElementById('txt').value = '';
+        document.getElementById('bin').value = '';
     }
 </script>
-
 </body>
 </html>
